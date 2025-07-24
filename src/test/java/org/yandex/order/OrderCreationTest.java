@@ -1,11 +1,11 @@
 package org.yandex.order;
 
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.yandex.order.core.BaseOrderTest;
-import org.yandex.order.model.Order;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,12 +35,11 @@ public class OrderCreationTest extends BaseOrderTest {
     @Test
     @DisplayName("Создание заказа")
     public void createOrderTest() {
-        Order order = orderSteps.generateBaseOrder();
         order.setColor(color);
 
         orderSteps.createOrder(order)
                 .then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .body("track", notNullValue());
     }
 }

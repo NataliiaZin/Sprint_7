@@ -1,6 +1,7 @@
 package org.yandex.order;
 
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.yandex.order.core.BaseOrderTest;
 
@@ -16,7 +17,7 @@ public class OrderListTest extends BaseOrderTest {
         orderSteps.createOrder(orderSteps.generateBaseOrder());
         orderSteps.getOrders()
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("orders", is(notNullValue()))
                 .body("orders", instanceOf(List.class));
     }

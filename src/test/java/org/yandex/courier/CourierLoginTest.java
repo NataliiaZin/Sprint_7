@@ -1,6 +1,7 @@
 package org.yandex.courier;
 
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.yandex.courier.core.BaseCourierTest;
 
@@ -15,7 +16,7 @@ public class CourierLoginTest extends BaseCourierTest {
         courierSteps.createCourier(courier);
         courierSteps.loginCourier(courier)
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("id", notNullValue());
     }
 
@@ -26,7 +27,7 @@ public class CourierLoginTest extends BaseCourierTest {
         courier.setLogin(null);
         courierSteps.sendLoginRequest(courier)
                 .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для входа"));
     }
 
@@ -37,7 +38,7 @@ public class CourierLoginTest extends BaseCourierTest {
         courier.setPassword(null);
         courierSteps.sendLoginRequest(courier)
                 .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для входа"));
     }
 
@@ -48,7 +49,7 @@ public class CourierLoginTest extends BaseCourierTest {
         courier.setLogin(generateRandomString(12));
         courierSteps.loginCourier(courier)
                 .then()
-                .statusCode(404)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("message", containsString("Учетная запись не найдена"));
     }
 
@@ -59,7 +60,7 @@ public class CourierLoginTest extends BaseCourierTest {
         courier.setPassword(generateRandomString(12));
         courierSteps.loginCourier(courier)
                 .then()
-                .statusCode(404)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("message", containsString("Учетная запись не найдена"));
     }
 
@@ -68,7 +69,7 @@ public class CourierLoginTest extends BaseCourierTest {
     public void loginFailsIfCourierNotExistTest() {
         courierSteps.loginCourier(courierSteps.generateCourier())
                 .then()
-                .statusCode(404)
+                .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("message", containsString("Учетная запись не найдена"));
     }
 }

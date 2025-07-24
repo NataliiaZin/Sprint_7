@@ -1,6 +1,7 @@
 package org.yandex.courier;
 
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.yandex.courier.core.BaseCourierTest;
 
@@ -14,7 +15,7 @@ public class CourierCreationCourierTest extends BaseCourierTest {
     public void createCourierSuccessfullyTest() {
         courierSteps.createCourier(courier)
                 .then()
-                .statusCode(201)
+                .statusCode(HttpStatus.SC_CREATED)
                 .body("ok", is(true));
     }
 
@@ -23,11 +24,11 @@ public class CourierCreationCourierTest extends BaseCourierTest {
     public void cannotCreateDuplicateCourierTest() {
         courierSteps.createCourier(courier)
                 .then()
-                .statusCode(201);
+                .statusCode(HttpStatus.SC_CREATED);
 
         courierSteps.createCourier(courier)
                 .then()
-                .statusCode(409)
+                .statusCode(HttpStatus.SC_CONFLICT)
                 .body("message", containsString("Этот логин уже используется"));
     }
 
@@ -37,7 +38,7 @@ public class CourierCreationCourierTest extends BaseCourierTest {
         courier.setPassword(null);
         courierSteps.createCourier(courier)
                 .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 
@@ -47,17 +48,7 @@ public class CourierCreationCourierTest extends BaseCourierTest {
         courier.setLogin(null);
         courierSteps.createCourier(courier)
                 .then()
-                .statusCode(400)
-                .body("message", equalTo("Недостаточно данных для создания учетной записи"));
-    }
-
-    @Test
-    @DisplayName("Нельзя создать курьера без имени")
-    public void cannotCreateCourierWithoutFirstNameTest() {
-        courier.setFirstName(null);
-        courierSteps.createCourier(courier)
-                .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 }

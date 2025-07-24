@@ -1,5 +1,7 @@
 package org.yandex.order.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class Order {
@@ -13,6 +15,8 @@ public class Order {
     private String deliveryDate;
     private String comment;
     private List<String> color;
+    @JsonIgnore
+    private int track;
 
     public String getFirstName() {
         return firstName;
@@ -92,6 +96,15 @@ public class Order {
 
     public Order setColor(List<String> color) {
         this.color = color;
+        return this;
+    }
+
+    public int getTrack() {
+        return track;
+    }
+
+    public Order setTrack(int track) {
+        this.track = track;
         return this;
     }
 }

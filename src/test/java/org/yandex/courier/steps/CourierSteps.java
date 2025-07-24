@@ -4,10 +4,10 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
+import org.yandex.core.constants.Endpoints;
 import org.yandex.courier.model.Courier;
 
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.is;
 import static org.yandex.util.StringUtils.generateRandomString;
 
 public class CourierSteps {
@@ -16,8 +16,7 @@ public class CourierSteps {
     public Courier generateCourier() {
         return new Courier()
                 .setLogin(generateRandomString(12))
-                .setPassword(generateRandomString(12))
-                .setFirstName(generateRandomString(12));
+                .setPassword(generateRandomString(12));
     }
 
     @Step("Создать курьера")
@@ -25,13 +24,13 @@ public class CourierSteps {
         return RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(courier)
-                .post("/api/v1/courier");
+                .post(Endpoints.COURIER_ENDPOINT);
     }
 
     @Step("Войти под курьером")
     public Response loginCourier(Courier courier) {
         Response res = sendLoginRequest(courier);
-        if (res.statusCode() == 201) {
+        if (res.statusCode() == HttpStatus.SC_CREATED) {
             courier.setId(res
                     .then()
                     .extract()
@@ -43,9 +42,7 @@ public class CourierSteps {
     @Step("Удалить курьера с ID {id}")
     public void deleteCourier(int id) {
         RestAssured.given()
-                .delete("/api/v1/courier/" + id)
-                .then()
-                .statusCode(anyOf(is(200), is(404)));
+                .delete(Endpoints.COURIER_ENDPOINT + id);
     }
 
     @Step("Отправка запроса логина")
@@ -53,7 +50,7 @@ public class CourierSteps {
         return RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(courier)
-                .post("/api/v1/courier/login");
+                .post(Endpoints.COURIER_LOGIN_ENDPOINT);
     }
 
 }

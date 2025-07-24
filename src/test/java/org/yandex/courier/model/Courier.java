@@ -6,7 +6,6 @@ public class Courier {
 
     private String login;
     private String password;
-    private String firstName;
     @JsonIgnore
     private Integer id;
 
@@ -25,15 +24,6 @@ public class Courier {
 
     public Courier setLogin(String login) {
         this.login = login;
-        return this;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public Courier setFirstName(String firstName) {
-        this.firstName = firstName;
         return this;
     }
 
